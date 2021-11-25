@@ -5,15 +5,19 @@ We provide exercises for pytorch and keras. TODO recommend which exercises parti
 ## Pytorch
 
 Exercises for Image Classification with pytorch. Contains the following exercises:
-- `1_data_preparation`: pytorch dataloader for classification. [Open in colab](https://colab.research.google.com/github/constantinpape/dl-teaching-resources/blob/main/exercises/classification/1_data_preperation.ipynb).
-- `2_logistic_regression`: image classification with a simple logistic regression model. [Open in colab](https://colab.research.google.com/github/constantinpape/dl-teaching-resources/blob/main/exercises/classification/2_logistic_regression.ipynb).
-- `3_multi_layer_perceptron`: image classification with a multi-layer perceptron. [Open in colab](https://colab.research.google.com/github/constantinpape/dl-teaching-resources/blob/main/exercises/classification/3_multi_layer_perceptron.ipynb).
+- `pytorch/1_data_preparation`: pytorch dataloader for classification. [Open in colab](https://colab.research.google.com/github/constantinpape/dl-teaching-resources/blob/main/exercises/classification/1_data_preperation.ipynb).
+- `pytorch/2_logistic_regression`: image classification with a simple logistic regression model. [Open in colab](https://colab.research.google.com/github/constantinpape/dl-teaching-resources/blob/main/exercises/classification/2_logistic_regression.ipynb).
+- `pytorch/3_multi_layer_perceptron`: image classification with a multi-layer perceptron. [Open in colab](https://colab.research.google.com/github/constantinpape/dl-teaching-resources/blob/main/exercises/classification/3_multi_layer_perceptron.ipynb).
 
 All the exercises use the [CIFAR10 Dataset](https://www.cs.toronto.edu/~kriz/cifar.html).
 
-## Keras
+## tensorflow/keras
 
-TODO
+Here we will perform a simple classification task that will show you the basics of using tensorflow/keras.  
+
+- `keras/classification_simple_keras.ipynb`: Basic demonstration of a feature classification example with a Multi layer perceptron (MLP) using tensorflow/keras
+
+
 
 ## Content
 
