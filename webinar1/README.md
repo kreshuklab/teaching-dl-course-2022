@@ -1,4 +1,4 @@
-# Exercises for Webinar2
+# Exercises for Webinar 1
 
 The exercise for the first webinar will refresh your image analysis knowledge and teach basic image analysis methods in python with scikit-image.
 Please finish the following exercise before the first webinar:
