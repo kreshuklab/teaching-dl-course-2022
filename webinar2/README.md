@@ -10,6 +10,7 @@ Exercises for Image Classification with pytorch. Contains the following exercise
 - `pytorch/3_multi_layer_perceptron`: image classification with a multi-layer perceptron. [Open in colab](https://colab.research.google.com/github/constantinpape/dl-teaching-resources/blob/main/exercises/classification/3_multi_layer_perceptron.ipynb).
 
 All the exercises use the [CIFAR10 Dataset](https://www.cs.toronto.edu/~kriz/cifar.html).
+For the pytorch exercises, please use the `DL Course(Pytorch)` environment in BAND. You can start it via `Applications->Programming->DL Course(Pytorch)`.
 
 ## tensorflow/keras
 
@@ -17,7 +18,7 @@ Here we will perform a simple classification task that will show you the basics 
 
 - `keras/classification_simple_keras.ipynb`: Basic demonstration of a feature classification example with a Multi layer perceptron (MLP) using tensorflow/keras
 
-
+For the keras exercises, please use the `DL Course(Keras)` environment in BAND. You can start it via `Applications->Programming->DL Course(Keras)`.
 
 ## Content
 
