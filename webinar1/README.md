@@ -9,9 +9,16 @@ If you are unfamiliar with image analysis or python in general, please check out
 
 ## Additional materials:
  
-### Introductions to image analysis for biology 
+### Introductions to image analysis for biology (ibiology videos)
  * [Introduction to Bioimage Analysis](https://www.ibiology.org/techniques/introduction-to-bioimage-analysis/)
  * [Bioimage Analysis](https://www.ibiology.org/techniques/bioimage-analysis/)
+
+### Bioimage analysis with python and jupyter (neubias webinar)
+* [part 1](https://www.youtube.com/watch?v=2KF8vBrp3Zw&t=0s)
+* [part 2](https://www.youtube.com/watch?v=Y3pB3wnOivE&t=0s)
+* [Q&A](https://forum.image.sc/t/neubias-academy-home-webinar-interactive-bioimage-analysis-with-python-and-jupyter-questions-answers/37596)
+* [slides](https://docs.google.com/presentation/d/1N1ikhtEscuviINAnqUXnUSRS-Gz9sp-0bX8IO_ecW3E/edit)
+* [notebooks](https://github.com/guiwitz/neubias_academy_biapy)
 
 ### Introductions to python and data science in python
  * [Tutorial: Basic Python](https://www.w3schools.com/python/)
