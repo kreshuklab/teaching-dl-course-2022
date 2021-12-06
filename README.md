@@ -6,7 +6,7 @@ Webinar 1 (03.12.2021)
 
 Webinar 2 (17.12.2021)
 
-Webinar 3 (??.01.2022)
+Webinar 3 (10.01.2022)
 
 
 ## Set-up:
@@ -41,3 +41,19 @@ These BAND desktops are open resources provided by EMBL as part of EOSCLife. For
 - For more and faster storage `/tmp` can be used. It is temporary, i.e. will be lost after the session. Hence make sure to copy data you want to keep to your home directory.
 - The required software and environments can be pre-installed (see example for `DL Course` environment above) so course participants don't need to set up everything on their own.
 - Traning data or other large data-sets can be shared via the EMBL S3 data storage, which can be accessed via `Applications->Data Access->Mount EMBL S3 Bucket`
+
+## Setting up an environment on your own machine
+
+We also provide python environments that are compatible with the course material:
+- `environments/pytorch` contains the pytorch environment files (one for setting up an environment with GPU support, the other for setting up a CPU-only environment)
+- `environments/keras` contains the keras environment file
+
+You can install one of these environments with conda:
+```
+conda env create -f </path/to/<ENV-FILE-NAME>.yaml>
+```
+and then activate it via
+```
+conda activate <ENV-NAME>
+```
+If you are not familiar with conda, please refer to the [conda tutorials](https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html).
