@@ -15,7 +15,6 @@ If you are unfamiliar with image analysis or python in general, please check out
 
 ### Introductions to python and data science in python
  * [Tutorial: Basic Python](https://www.w3schools.com/python/)
- * [Introduction to Python for Data Science](https://www.edx.org/course/introduction-to-python-for-data-science-2) - basic
  * [Python for Data Science and AI](https://www.coursera.org/learn/python-for-applied-data-science-ai) - basic
  * [Python 3 Programming Specialization](https://www.coursera.org/specializations/python-3-programming) - different levels 
  * [Python for science](https://scipy-lectures.org/intro/index.html) - lecture notes, useful to walk through
