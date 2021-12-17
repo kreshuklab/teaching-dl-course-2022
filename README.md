@@ -42,6 +42,15 @@ These BAND desktops are open resources provided by EMBL as part of EOSCLife. For
 - The required software and environments can be pre-installed (see example for `DL Course` environment above) so course participants don't need to set up everything on their own.
 - Traning data or other large data-sets can be shared via the EMBL S3 data storage, which can be accessed via `Applications->Data Access->Mount EMBL S3 Bucket`
 
+### Downloading the exercises to BAND
+
+- Open the terminal (e.g. via small terminal system in the top toolbar)
+- clone this repository via `git clone https://github.com/kreshuklab/teaching-dl-course-2022.git`
+- Now you can navigate to the folders with exercises in the jupyter environment to run the exercises
+- To update the repository, e.g. to download new exercises, open the terminal again and
+    - Go into the directory via `cd teaching-dl-course-2022.git` (or some other filepath if you did not directly clone it to your home)
+    - update the repository via `git pull origin main`
+
 ## Setting up an environment on your own machine
 
 We also provide python environments that are compatible with the course material:
