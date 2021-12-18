@@ -1,6 +1,6 @@
 # Exercises for Webinar 2
 
-We provide exercises for pytorch and keras. TODO recommend which exercises participants should do.
+We provide exercises for pytorch and keras.
 
 ## Pytorch
 
