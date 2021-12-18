@@ -51,6 +51,25 @@ These BAND desktops are open resources provided by EMBL as part of EOSCLife. For
     - Go into the directory via `cd teaching-dl-course-2022.git` (or some other filepath if you did not directly clone it to your home)
     - update the repository via `git pull origin main`
 
+### Enabling copy paste in BAND
+
+In many browsers copy-and-paste between your system and BAND does not work by default. You can however copy-and-paste into an intermediate menu and then copy-and-paste into/from band (copy to band explained below, pasting from BAND similarly):
+- copy text on your computer
+- go to the BAND desktop, press `ctrl+shift+alt`
+- this will open a menu; now paste the copied text into the menu (`ctrl+v`)
+- copy the text in the menu (`ctrl+c`)
+- close the menu again via `ctrl+shift+alt`
+- now you can copy the text into BAND
+
+If you need to copy-and-paste a lot of text and the above procedure is incovenient for you, you can also try to activate direct copy-and-paste in your browser:
+- on chrome: https://winaero.com/enable-shared-clipboard-in-google-chrome/
+- on firefox:
+    - opena ne wfirefox tab
+    - in the url field type `about:config` and press enter, this will open the config page
+    - in the config page search `Clipboard`
+    - find `dom.events.testing.asyncClipbaord` and set it to `true`
+    - restart your browser; now copy and paste should work directly
+
 ## Setting up an environment on your own machine
 
 We also provide python environments that are compatible with the course material:
