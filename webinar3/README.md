@@ -24,7 +24,8 @@ A simple *semantic* segmentation pipeline for 2D images using a good old UNet ne
 
 A *instance* segmentation pipeline for 2D images using a *stardist*  network, a specific detection/segmentation method for roundish objects. The data consists of fluorescently labeled nuclei, which are typically quite roundish thus rendering this approach suitable. 
 
-### `3_instance_segmentation_3D.ipynb.ipynb`
+
+### `3_instance_segmentation_3D.ipynb.ipynb`
 
 A *instance* segmentation pipeline for 3D images using a *stardist* 3D network. The data consists of synthetically created nuclei.
 
@@ -33,5 +34,5 @@ A *instance* segmentation pipeline for 3D images using a *stardist* 3D network. 
 
  * [Python Classes Basic Tutorial](https://www.w3schools.com/python/python_classes.asp)
  * [Python Classes Basic Tutorial 2](https://www.learnpython.org/en/Classes_and_Objects)
- * [Python Classes In-depth Tutorial](https://jeffknupp.com/blog/2014/06/18/improve-your-python-python-classes-and-object-oriented-programming/)
+ * [Python Classes In-depth Tutorial](https://hackernoon.com/improve-your-python-python-classes-and-object-oriented-programming-d09ff461168d)
  * [Intuition Behind UNet](https://towardsdatascience.com/u-net-b229b32b4a71)
