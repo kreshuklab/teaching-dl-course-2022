@@ -90,7 +90,7 @@ If you are not familiar with conda, please refer to the [conda tutorials](https:
 
 To upload data to BAND and share it with other course participants we use the EMBL S3 storage. In order to upload data to it:
 - Go to [https://s3.embl.de/](https://s3.embl.de/)
-- Log in with the credentials (will be send to you separately)
+- Log in with the credentials (available on the eCampus forum)
 - Select `Buckets` in the `MINIO CONSOLE` menu
 - Click on `Browse` for the `dl-course-2022` bucket
 - You can now see all the data that has been uploaded already
