@@ -85,3 +85,22 @@ and then activate it via
 conda activate <ENV-NAME>
 ```
 If you are not familiar with conda, please refer to the [conda tutorials](https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html).
+
+## Uploading data to BAND
+
+To upload data to BAND and share it with other course participants we use the EMBL S3 storage. In order to upload data to it:
+- Go to [https://s3.embl.de/](https://s3.embl.de/)
+- Log in with the credentials (available on the eCampus forum)
+- Select `Buckets` in the `MINIO CONSOLE` menu
+- Click on `Browse` for the `dl-course-2022` bucket
+- You can now see all the data that has been uploaded already
+- In the top right select `Upload file` to upload a single file or `Upload folder` to upload a folder, then select the file/folder on your file system.
+- After the upload has finished you should see the new file(s) listed in the `dl-course-2022` bucket.
+
+To access the data in the `dl-course-2022` bucket in BAND:
+- Select `Applications->Data Access->Mount EMBL S3 Bucket`
+- In the menu that opens enter the same credentials as before. `Access Key` is the same as the username and `Secret Key` the same as the password. Enter `dl-course-20222` for the bucket name.
+- This will open a folder with the contents of the bucket that can be accessed normally through the filesystem. It is available in your home directory as `dl-course-2022`.
+
+Note tha the data you upload will be accessible to all other participants and trainers.
+Plesae do not share the data another participant has uploaded without their consent.
