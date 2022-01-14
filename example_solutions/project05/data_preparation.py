@@ -1,0 +1,79 @@
+import argparse
+import os
+from concurrent import futures
+from functools import partial
+from glob import glob
+
+import imageio
+import numpy as np
+from skimage.transform import rescale
+from tqdm import tqdm
+
+
+def to_target_shape(data, target_shape):
+    if data.shape == target_shape:
+        return data
+    for dim, (sh, tsh) in enumerate(zip(data.shape, target_shape)):
+        if sh == tsh:  # shapes in this dim agree, do nothing
+            continue
+        elif sh > tsh:  # shape is bigger than the target shape, crop
+            crop_dim = tuple(slice(0, tsh) if i == dim else slice(None) for i in range(data.ndim))
+            data = data[crop_dim]
+        else:  # shape is smaller than the target shape, pad
+            padding = [(0, tsh - sh) if i == dim else (0, 0) for i in range(data.ndim)]
+            data = np.pad(data, padding)
+    assert data.shape == target_shape
+    return data
+
+
+def prepare_volume(im_path, image_folder, label_folder, scale_factor, target_shape):
+    label_path = im_path.replace("images", "labels").replace("Rec.tif", "Rec_labels.tif")
+    vol = imageio.volread(im_path)
+    labels = imageio.volread(label_path)
+    # to skip the volume with a different shape
+    if vol.shape != labels.shape:
+        return
+    vol = rescale(vol, scale=scale_factor, preserve_range=True)
+    labels = rescale(labels, scale_factor, order=0, preserve_range=True, anti_aliasing=False).astype(labels.dtype)
+    # pad / crop so that we have the target shape
+    vol = to_target_shape(vol, target_shape)
+    labels = to_target_shape(labels, target_shape)
+    # write the downscaled data
+    im_name = os.path.split(im_path)[1]
+    imageio.volwrite(os.path.join(image_folder, im_name), vol)
+    lab_name = os.path.split(label_path)[1]
+    imageio.volwrite(os.path.join(label_folder, lab_name), labels)
+
+
+def data_preparation(input_folder, output_folder, n_workers):
+    image_folder = os.path.join(output_folder, "images")
+    label_folder = os.path.join(output_folder, "labels")
+    os.makedirs(image_folder, exist_ok=True)
+    os.makedirs(label_folder, exist_ok=True)
+    image_paths = glob(os.path.join(input_folder, "images", "*.tif"))
+
+    scale_factor = (1. / 8, 1. / 4, 1. / 4)
+    target_shape = (128,) * 3
+
+    if n_workers > 1:  # parallelized version to speed this up a bit
+        with futures.ProcessPoolExecutor(n_workers) as pool:
+            func = partial(prepare_volume, image_folder=image_folder,
+                           label_folder=label_folder, scale_factor=scale_factor,
+                           target_shape=target_shape)
+            list(tqdm(pool.map(func, image_paths), total=len(image_paths)))
+    else:  # normal version
+        for im_path in tqdm(image_paths):
+            prepare_volume(im_path, image_folder, label_folder, scale_factor, target_shape)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-i", "--input")
+    parser.add_argument("-o", "--output")
+    parser.add_argument("-n", "--n_workers", type=int, default=0)
+    args = parser.parse_args()
+    data_preparation(args.input, args.output, args.n_workers)
+
+
+if __name__ == "__main__":
+    main()
