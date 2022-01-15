@@ -7,6 +7,7 @@ from torch_em.util import parser_helper
 def get_loader(args, patch_shape, split):
     raw_root = os.path.join(args.input, split, "raw")
     labels_root = os.path.join(args.input, split, "instance_labels")
+    n_samples = 100 if split == "train" else 4
     assert os.path.exists(raw_root), raw_root
     assert os.path.exists(labels_root)
     label_transform = torch_em.transform.BoundaryTransform(add_binary_target=True, ndim=2)
@@ -15,6 +16,7 @@ def get_loader(args, patch_shape, split):
         label_transform=label_transform,
         batch_size=args.batch_size, patch_shape=patch_shape,
         num_workers=8, shuffle=True, is_seg_dataset=False,
+        n_samples=n_samples,
     )
     return loader
 

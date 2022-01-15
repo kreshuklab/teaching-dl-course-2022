@@ -13,7 +13,7 @@ def myelin_label_transform(labels):
         one_hot[chan] = labels == label_id
     # compute the mask and stack it with the labels
     # (3 times, because we need 1 mask channel per target channel)
-    mask = (labels == 4)[None].astype("float32")
+    mask = (labels != 4)[None].astype("float32")
     one_hot = np.concatenate([one_hot, mask, mask, mask], axis=0)
     return one_hot
 
@@ -21,6 +21,7 @@ def myelin_label_transform(labels):
 def get_loader(args, patch_shape, split):
     raw_root = os.path.join(args.input, split, "raw")
     labels_root = os.path.join(args.input, split, "semantic_labels")
+    n_samples = 100 if split == "train" else 4
     assert os.path.exists(raw_root), raw_root
     assert os.path.exists(labels_root)
     loader = torch_em.default_segmentation_loader(
@@ -28,6 +29,7 @@ def get_loader(args, patch_shape, split):
         label_transform=myelin_label_transform,
         batch_size=args.batch_size, patch_shape=patch_shape,
         num_workers=8, shuffle=True, is_seg_dataset=False,
+        n_samples=n_samples
     )
     return loader
 
