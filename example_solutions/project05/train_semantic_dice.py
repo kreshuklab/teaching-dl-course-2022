@@ -1,4 +1,5 @@
 import os
+from glob import glob
 import torch_em
 import numpy as np
 from torch_em.model import UNet3d
@@ -15,13 +16,11 @@ def microct_label_transform(labels):
 
 
 def get_loader(args, patch_shape, split):
-    raw_root = os.path.join(args.input, split, "images")
-    labels_root = os.path.join(args.input, split, "labels")
+    data_paths = glob(os.path.join(args.input, split, "*.h5"))
+    assert len(data_paths) > 0
     n_samples = 100 if split == "train" else 4
-    assert os.path.exists(raw_root), raw_root
-    assert os.path.exists(labels_root)
     loader = torch_em.default_segmentation_loader(
-        raw_root, "*.tif", labels_root, "*.tif",
+        data_paths, "image", data_paths, "labels",
         label_transform=microct_label_transform,
         batch_size=args.batch_size, patch_shape=patch_shape,
         num_workers=8, shuffle=True, is_seg_dataset=True,
@@ -33,7 +32,6 @@ def get_loader(args, patch_shape, split):
 def train_semantic_dice(args):
     # we have four output channels: gut, stomach, left + right ovaries
     n_out = 4
-    # TODO maybe need a smaller net
     # could also try a softmax here
     model = UNet3d(in_channels=1, out_channels=n_out, final_activation="Sigmoid")
 

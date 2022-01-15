@@ -6,6 +6,7 @@ from glob import glob
 from shutil import copyfile
 
 import imageio
+import h5py
 import numpy as np
 from skimage.transform import rescale
 from tqdm import tqdm
@@ -71,6 +72,7 @@ def rescale_data(input_folder, n_workers):
 def make_splits(input_folder):
     output_folder = os.path.join(input_folder, "prepared")
     input_folder = os.path.join(input_folder, "rescaled")
+    assert os.path.exists(input_folder)
     image_paths = glob(os.path.join(input_folder, "images", "*.tif"))
 
     # we split: 70% train, 10% val, 20% test
@@ -95,13 +97,48 @@ def make_splits(input_folder):
         copyfile(label_path, os.path.join(output_folder, split, "labels", os.path.split(label_path)[1]))
 
 
+def make_splits_h5(input_folder):
+    output_folder = os.path.join(input_folder, "prepared")
+    input_folder = os.path.join(input_folder, "rescaled")
+    assert os.path.exists(input_folder)
+    image_paths = glob(os.path.join(input_folder, "images", "*.tif"))
+
+    # we split: 70% train, 10% val, 20% test
+    n_images = len(image_paths)
+    last_train_id = int(0.7 * n_images)
+    last_val_id = int(0.8 * n_images)
+
+    for im_id, im_path in enumerate(image_paths):
+        label_path = im_path.replace("images", "labels").replace("Rec.tif", "Rec_labels.tif")
+        assert os.path.exists(label_path)
+
+        if im_id <= last_train_id:
+            split = "train"
+        elif im_id <= last_val_id:
+            split = "val"
+        else:
+            split = "test"
+        os.makedirs(os.path.join(output_folder, split), exist_ok=True)
+        fname = os.path.split(im_path)[1].replace(".tif", ".h5")
+        out_path = os.path.join(output_folder, split, fname)
+        im = imageio.volread(im_path)
+        labels = imageio.volread(label_path)
+        with h5py.File(out_path, "w") as f:
+            f.create_dataset("image", data=im, compression="gzip")
+            f.create_dataset("labels", data=labels, compression="gzip")
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--input")
     parser.add_argument("-n", "--n_workers", type=int, default=0)
+    parser.add_argument("--to_h5", default=0, type=int)
     args = parser.parse_args()
-    rescale_data(args.input, args.n_workers)
-    make_splits(args.input)
+    # rescale_data(args.input, args.n_workers)
+    if bool(args.to_h5):
+        make_splits_h5(args.input)
+    else:
+        make_splits(args.input)
 
 
 if __name__ == "__main__":
