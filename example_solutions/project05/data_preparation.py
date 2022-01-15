@@ -3,6 +3,7 @@ import os
 from concurrent import futures
 from functools import partial
 from glob import glob
+from shutil import copyfile
 
 import imageio
 import numpy as np
@@ -45,7 +46,8 @@ def prepare_volume(im_path, image_folder, label_folder, scale_factor, target_sha
     imageio.volwrite(os.path.join(label_folder, lab_name), labels)
 
 
-def data_preparation(input_folder, output_folder, n_workers):
+def rescale_data(input_folder, n_workers):
+    output_folder = os.path.join(input_folder, "rescaled")
     image_folder = os.path.join(output_folder, "images")
     label_folder = os.path.join(output_folder, "labels")
     os.makedirs(image_folder, exist_ok=True)
@@ -66,13 +68,40 @@ def data_preparation(input_folder, output_folder, n_workers):
             prepare_volume(im_path, image_folder, label_folder, scale_factor, target_shape)
 
 
+def make_splits(input_folder):
+    output_folder = os.path.join(input_folder, "prepared")
+    input_folder = os.path.join(input_folder, "rescaled")
+    image_paths = glob(os.path.join(input_folder, "images", "*.tif"))
+
+    # we split: 70% train, 10% val, 20% test
+    n_images = len(image_paths)
+    last_train_id = int(0.7 * n_images)
+    last_val_id = int(0.8 * n_images)
+
+    for im_id, im_path in enumerate(image_paths):
+        label_path = im_path.replace("images", "labels").replace("Rec.tif", "Rec_labels.tif")
+        assert os.path.exists(label_path)
+
+        if im_id <= last_train_id:
+            split = "train"
+        elif im_id <= last_val_id:
+            split = "val"
+        else:
+            split = "test"
+        os.makedirs(os.path.join(output_folder, split, "images"), exist_ok=True)
+        os.makedirs(os.path.join(output_folder, split, "labels"), exist_ok=True)
+
+        copyfile(im_path, os.path.join(output_folder, split, "images", os.path.split(im_path)[1]))
+        copyfile(label_path, os.path.join(output_folder, split, "labels", os.path.split(label_path)[1]))
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--input")
-    parser.add_argument("-o", "--output")
     parser.add_argument("-n", "--n_workers", type=int, default=0)
     args = parser.parse_args()
-    data_preparation(args.input, args.output, args.n_workers)
+    rescale_data(args.input, args.n_workers)
+    make_splits(args.input)
 
 
 if __name__ == "__main__":
