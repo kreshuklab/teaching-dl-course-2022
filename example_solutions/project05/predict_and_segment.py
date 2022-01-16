@@ -28,7 +28,7 @@ def predict(input_path, output_path, output_keys, model, device):
 
 def predict_semantic(input_folder, output_folder, model_path):
     # TODO I am not sure about the order of semantic labels here
-    output_keys = ["predictions/stomach", "predictions/gut", "predictions/left_ovaries", "preditions/right_ovaries"]
+    output_keys = ["predictions/stomach", "predictions/gut", "predictions/left_ovaries", "predictions/right_ovaries"]
     inputs = glob(os.path.join(input_folder, "*.h5"))
     trainer = get_trainer(model_path)
     model, device = trainer.model, trainer.device
