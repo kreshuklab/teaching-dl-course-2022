@@ -21,6 +21,7 @@ Alternative ideas: train the semantic network with cross entropy or try a single
 
 - **predict_and_segment** Run prediction on the test images and postprocess the results to obtain an instance and semantic segmentation.
 - **view_results** Visually inspect the results.
+- **export_for_modelzoo** Export in bioimage.io modelzoo format to make the model shareable.
 
 The instance segmentation is done via multicut segmentation using the [elf](https://github.com/constantinpape/elf) segmentation library.
 For semantic segmentation  the max class is assigned inside of segmented obejcts.
