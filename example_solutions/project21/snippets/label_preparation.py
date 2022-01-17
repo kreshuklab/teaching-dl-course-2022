@@ -28,5 +28,5 @@ def process_all_labels(input_folder):
 
 
 # adapt this path to where you have saved the data
-input_folder = ""
-process_labels(input_folder)
+input_folder = os.path.expanduser("~", "data")
+process_all_labels(input_folder)
