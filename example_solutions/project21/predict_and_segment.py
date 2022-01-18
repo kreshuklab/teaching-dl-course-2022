@@ -9,8 +9,9 @@ import numpy as np
 from torch_em.util import get_trainer
 from torch_em.transform.raw import standardize
 from torch_em.util.prediction import predict_with_halo
-from skimage.measure import regionprops
-from skimage.segmentation import relabel_sequential
+from skimage.measure import regionprops, label
+from skimage.segmentation import relabel_sequential, watershed
+# from skimage.morphology import remove_small_holes
 
 # this export is needed to load the model again
 from train_semantic_dice import myelin_label_transform
@@ -64,7 +65,7 @@ def sharpen_predictions(predictions, percentile=95, clip=True):
     return predictions
 
 
-def instance_segmentation(path):
+def run_multicut(path):
     with h5py.File(path, "r") as f:
         foreground = f["predictions/foreground"][:]
         boundaries = f["predictions/boundaries"][:]
@@ -105,17 +106,45 @@ def instance_segmentation(path):
         ds[:] = postprocessed
 
 
-def segment_instances(folder):
+def run_connected_components(path):
+    with h5py.File(path, "r") as f:
+        foreground = f["predictions/foreground"][:]
+        boundaries = f["predictions/boundaries"][:]
+    # percentile based prediction normalization
+    foreground = sharpen_predictions(foreground)
+    boundaries = sharpen_predictions(boundaries)
+
+    threshold = 0.5
+    seeds = np.clip(foreground - boundaries, 0, 1)
+    seeds = label(seeds > threshold)
+
+    mask = foreground + boundaries > threshold
+    segmentation = watershed(boundaries, seeds, mask=mask)
+    # segmentation = remove_small_holes(segmentation, area_threshold=200)
+
+    with h5py.File(path, "a") as f:
+        ds = f.require_dataset(
+            "segmentation/watershed", shape=segmentation.shape, compression="gzip", dtype=segmentation.dtype
+        )
+        ds[:] = segmentation
+
+
+def segment_instances(folder, use_multicut=False):
     files = glob(os.path.join(folder, "*.h5"))
     print("Run instance segmentation")
     for path in files:
-        instance_segmentation(path)
+        if use_multicut:
+            run_multicut(path)
+            return "segmentation/watershed"
+        else:
+            run_connected_components(path)
+            return "segmentation/postprocessed"
 
 
-def semantic_segmentation(path):
+def semantic_segmentation(path, instance_seg_key):
     # load the isntance segmentation and the semantic predictions
     with h5py.File(path, "r") as f:
-        instances = f["segmentation/postprocessed"][:]
+        instances = f[instance_seg_key][:]
         pred_keys = ["axon", "tongue", "myelin"]
         semantic_pred = []
         for key in pred_keys:
@@ -134,11 +163,11 @@ def semantic_segmentation(path):
         ds[:] = semantic_seg
 
 
-def segment_semantic(folder):
+def segment_semantic(folder, instance_seg_key):
     files = glob(os.path.join(folder, "*.h5"))
     print("Run semantic segmentation")
     for path in files:
-        semantic_segmentation(path)
+        semantic_segmentation(path, instance_seg_key)
 
 
 # alternative post-processing approaches:
@@ -153,10 +182,10 @@ def main():
     parser.add_argument("--semantic_model", default="./checkpoints/semantic-model-dice")
     args = parser.parse_args()
     os.makedirs(args.output_folder, exist_ok=True)
-    predict_semantic(args.input_folder, args.output_folder, args.semantic_model)
-    predict_boundaries(args.input_folder, args.output_folder, args.boundary_model)
-    segment_instances(args.output_folder)
-    segment_semantic(args.output_folder)
+    # predict_semantic(args.input_folder, args.output_folder, args.semantic_model)
+    # predict_boundaries(args.input_folder, args.output_folder, args.boundary_model)
+    instance_seg_key = segment_instances(args.output_folder)
+    segment_semantic(args.output_folder, instance_seg_key)
 
 
 if __name__ == "__main__":
