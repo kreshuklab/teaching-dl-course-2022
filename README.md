@@ -99,7 +99,7 @@ To upload data to BAND and share it with other course participants we use the EM
 
 To access the data in the `dl-course-2022` bucket in BAND:
 - Select `Applications->Data Access->Mount EMBL S3 Bucket`
-- In the menu that opens enter the same credentials as before. `Access Key` is the same as the username and `Secret Key` the same as the password. Enter `dl-course-20222` for the bucket name.
+- In the menu that opens enter the same credentials as before. `Access Key` is the same as the username and `Secret Key` the same as the password. Enter `dl-course-2022` for the bucket name.
 - This will open a folder with the contents of the bucket that can be accessed normally through the filesystem. It is available in your home directory as `dl-course-2022`.
 
 Note tha the data you upload will be accessible to all other participants and trainers.
