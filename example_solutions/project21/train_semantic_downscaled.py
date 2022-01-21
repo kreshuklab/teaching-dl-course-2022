@@ -1,6 +1,7 @@
 import os
 import torch_em
 import numpy as np
+from skimage.transform import rescale
 from torch_em.model import UNet2d
 from torch_em.util import parser_helper
 
@@ -18,6 +19,22 @@ def myelin_label_transform(labels):
     return one_hot
 
 
+class MyelinTransform:
+    def __init__(self, scale_factor=0.5):
+        self.scale_factor = scale_factor
+        self.augmentations = torch_em.transform.get_augmentations(ndim=2)
+
+    def __call__(self, x, y):
+        nc = y.shape[0]
+        scale_factor = (self.scale_factor, self.scale_factor)
+        x = rescale(x, scale_factor)
+        scale_factor = (1, self.scale_factor, self.scale_factor)
+        y = rescale(y, scale_factor, order=0, anti_aliasing=False, preserve_range=True).astype(y.dtype)
+        assert y.shape[0] == nc
+        x, y = self.augmentations(x, y)
+        return x, y
+
+
 def get_loader(args, patch_shape, split):
     raw_root = os.path.join(args.input, split, "raw")
     labels_root = os.path.join(args.input, split, "semantic_labels")
@@ -29,7 +46,7 @@ def get_loader(args, patch_shape, split):
         label_transform=myelin_label_transform,
         batch_size=args.batch_size, patch_shape=patch_shape,
         num_workers=8, shuffle=True, is_seg_dataset=False,
-        n_samples=n_samples
+        n_samples=n_samples, transform=MyelinTransform()
     )
     return loader
 
@@ -41,14 +58,14 @@ def train_semantic_dice(args):
     model = UNet2d(in_channels=1, out_channels=n_out, final_activation="Sigmoid")
 
     # shape of input patches used for training
-    patch_shape = [1024, 1024]
+    patch_shape = [2048, 2048]
 
     train_loader = get_loader(args, patch_shape, "train")
     val_loader = get_loader(args, patch_shape, "val")
 
     loss = torch_em.loss.LossWrapper(torch_em.loss.DiceLoss(), transform=torch_em.loss.ApplyAndRemoveMask())
 
-    name = "semantic-model-dice"
+    name = "semantic-model-dice-downscaled"
     trainer = torch_em.default_segmentation_trainer(
         name=name,
         model=model,
@@ -78,7 +95,7 @@ def check(args, n_images=2):
 
 
 if __name__ == "__main__":
-    parser = parser_helper()
+    parser = parser_helper(default_batch_size=4)
     args = parser.parse_args()
     if args.check:
         check(args)

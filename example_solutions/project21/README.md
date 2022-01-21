@@ -7,15 +7,11 @@ This is an example solution for the myelin segmentation project.
 - **data_preparation** Visualize the images and labels of the myelin dataset with [napari](https://napari.org/).
 - **data_preparation** Create a train / validation split. Note: once we have more images this needs to be updated and we should also create a test split.
 
-Alternative ideas: maybe downsampling the data by a factor of 2 might help for the downstream task to improve the effective field of view.
-
 ## Training
 
-- **train_semantic_dice** Train a network for semantic segmentation of axon, myelin and tongue labels with the dice loss.
-- **train_boundaries** Train a network to predict foreground and boundary probabilities for the axons.
+- **train_semantic_downscaled** Train a network for semantic segmentation of axon, myelin and tongue labels with the dice loss; the images are downscaled by a factor of two for increased field of view.
 
 The training is implemented with [torch_em](https://github.com/constantinpape/torch-em).
-Alternative ideas: train the semantic network with cross entropy or try a single network per semantic class.
 
 ## Prediction & Postprocessing
 
@@ -23,8 +19,5 @@ Alternative ideas: train the semantic network with cross entropy or try a single
 - **view_results** Visually inspect the results.
 - **export_for_modelzoo** Export in bioimage.io modelzoo format to make the model shareable.
 
-The instance segmentation is done via multicut segmentation using the [elf](https://github.com/constantinpape/elf) segmentation library.
+The instance segmentation is done via connected components and watershed using the implementations from scikit-image.
 For semantic segmentation  the max class is assigned inside of segmented obejcts.
-
-Alternative ideas: maybe the boundary predictions are not required and the instance segmentation could be done from the predictions of the semantic network as well, by using the myelin channel as boundary probabilities and the combined axon, myelin and foreground probabilities as foreground channel. But this approach would be inferior if axons touch without discerinible myelin in between.
-Adanced: use a joint instance and semantic segmentation approach.
